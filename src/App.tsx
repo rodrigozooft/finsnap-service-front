@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MainLayout } from '@/components/layout';
+import { ProtectedRoute } from '@/components/auth';
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
 import { DashboardPage } from '@/pages/dashboard/DashboardPage';
@@ -20,11 +21,13 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
 
           {/* Protected routes with layout */}
-          <Route element={<MainLayout />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/connections" element={<ConnectionsPage />} />
-            <Route path="/api-keys" element={<APIKeysPage />} />
-            <Route path="/billing" element={<BillingPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route element={<MainLayout />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/connections" element={<ConnectionsPage />} />
+              <Route path="/api-keys" element={<APIKeysPage />} />
+              <Route path="/billing" element={<BillingPage />} />
+            </Route>
           </Route>
 
           {/* Redirect root to dashboard */}
