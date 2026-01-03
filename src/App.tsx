@@ -1,15 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MainLayout } from '@/components/layout';
+import { LoginPage } from '@/pages/auth/LoginPage';
+import { RegisterPage } from '@/pages/auth/RegisterPage';
+import { DashboardPage } from '@/pages/dashboard/DashboardPage';
+import { ConnectionsPage } from '@/pages/connections/ConnectionsPage';
+import { APIKeysPage } from '@/pages/api-keys/APIKeysPage';
+import { BillingPage } from '@/pages/billing/BillingPage';
 
 const queryClient = new QueryClient();
-
-// Placeholder components - to be implemented
-const LoginPage = () => <div className="p-8">Login Page - TODO</div>;
-const RegisterPage = () => <div className="p-8">Register Page - TODO</div>;
-const DashboardPage = () => <div className="p-8">Dashboard - TODO</div>;
-const ConnectionsPage = () => <div className="p-8">Connections Page - TODO</div>;
-const APIKeysPage = () => <div className="p-8">API Keys Page - TODO</div>;
-const BillingPage = () => <div className="p-8">Billing Page - TODO</div>;
 
 function App() {
   return (
@@ -20,11 +19,13 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          {/* Protected routes */}
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/connections" element={<ConnectionsPage />} />
-          <Route path="/api-keys" element={<APIKeysPage />} />
-          <Route path="/billing" element={<BillingPage />} />
+          {/* Protected routes with layout */}
+          <Route element={<MainLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/connections" element={<ConnectionsPage />} />
+            <Route path="/api-keys" element={<APIKeysPage />} />
+            <Route path="/billing" element={<BillingPage />} />
+          </Route>
 
           {/* Redirect root to dashboard */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
