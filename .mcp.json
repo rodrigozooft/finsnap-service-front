@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "npx",
+      "args": ["shadcn@latest", "mcp"]
+    },
+    "finsnap-services-docs": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/puelpan/openapi-spec-mcp.git@main",
+        "openapi-spec-mcp",
+        "https://dev-services.finsnap.tax/openapi.json"
+      ]
+    },
+    "aws-docs": {
+      "command": "uvx",
+      "args": [
+        "awslabs.aws-documentation-mcp-server@latest"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "AWS_DOCUMENTATION_PARTITION": "aws"
+      }
+    }
+  }
+}
