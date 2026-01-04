@@ -56,6 +56,7 @@ jobs:
   deploy-dev:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: dev
     permissions:
       id-token: write
       contents: read
@@ -92,27 +93,27 @@ jobs:
       - name: Sync to S3
         run: |
           # Upload static assets with long cache (Vite uses hash-based filenames)
-          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_DEV }} \
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET }} \
             --delete \
             --cache-control "public, max-age=31536000, immutable" \
             --exclude "index.html" \
             --exclude "*.json"
 
           # Upload index.html with no-cache for immediate updates
-          aws s3 cp dist/index.html s3://${{ secrets.S3_BUCKET_DEV }}/index.html \
+          aws s3 cp dist/index.html s3://${{ secrets.S3_BUCKET }}/index.html \
             --cache-control "no-cache, no-store, must-revalidate"
 
           # Upload JSON files (like manifest) with short cache
           for file in $(find dist -name "*.json" -type f); do
             relative_path="${file#dist/}"
-            aws s3 cp "$file" "s3://${{ secrets.S3_BUCKET_DEV }}/$relative_path" \
+            aws s3 cp "$file" "s3://${{ secrets.S3_BUCKET }}/$relative_path" \
               --cache-control "public, max-age=0, must-revalidate"
           done
 
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV }} \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
             --paths "/*"
 
   # ============================================
@@ -152,31 +153,31 @@ jobs:
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN_PROD }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Sync to S3
         run: |
           # Upload static assets with long cache (Vite uses hash-based filenames)
-          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_PROD }} \
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET }} \
             --delete \
             --cache-control "public, max-age=31536000, immutable" \
             --exclude "index.html" \
             --exclude "*.json"
 
           # Upload index.html with no-cache for immediate updates
-          aws s3 cp dist/index.html s3://${{ secrets.S3_BUCKET_PROD }}/index.html \
+          aws s3 cp dist/index.html s3://${{ secrets.S3_BUCKET }}/index.html \
             --cache-control "no-cache, no-store, must-revalidate"
 
           # Upload JSON files (like manifest) with short cache
           for file in $(find dist -name "*.json" -type f); do
             relative_path="${file#dist/}"
-            aws s3 cp "$file" "s3://${{ secrets.S3_BUCKET_PROD }}/$relative_path" \
+            aws s3 cp "$file" "s3://${{ secrets.S3_BUCKET }}/$relative_path" \
               --cache-control "public, max-age=0, must-revalidate"
           done
 
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PROD }} \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
             --paths "/*"
