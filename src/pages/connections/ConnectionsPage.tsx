@@ -36,8 +36,8 @@ const statusVariants: Record<ConnectionStatus, 'default' | 'secondary' | 'destru
 };
 
 const connectionTypeLabels: Record<string, string> = {
-  sii: 'SII (Tax Service)',
-  bank_itau: 'Banco Itau',
+  sii: 'SII (Servicio de Impuestos)',
+  bank_itau: 'Banco Itaú',
   bank_chile: 'Banco de Chile',
   bank_santander: 'Banco Santander',
 };
@@ -58,10 +58,10 @@ export function ConnectionsPage() {
 
     try {
       await deleteConnection.mutateAsync(deleteId);
-      toast.success('Connection deleted');
+      toast.success('Conexión eliminada');
       setDeleteId(null);
     } catch {
-      toast.error('Failed to delete connection');
+      toast.error('Error al eliminar la conexión');
     }
   };
 
@@ -69,9 +69,9 @@ export function ConnectionsPage() {
     setSyncingId(id);
     try {
       await triggerSync.mutateAsync(id);
-      toast.success('Sync started');
+      toast.success('Sincronización iniciada');
     } catch {
-      toast.error('Failed to trigger sync');
+      toast.error('Error al iniciar la sincronización');
     } finally {
       setSyncingId(null);
     }
@@ -79,16 +79,16 @@ export function ConnectionsPage() {
 
   const formatDate = (date: string | null) => {
     if (!date) return '-';
-    return new Date(date).toLocaleString();
+    return new Date(date).toLocaleString('es-CL');
   };
 
   if (error) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold">Connections</h1>
+        <h1 className="text-2xl font-bold">Conexiones</h1>
         <Card className="border-destructive">
           <CardContent className="py-6 text-center">
-            <p className="text-destructive">Failed to load connections</p>
+            <p className="text-destructive">Error al cargar las conexiones</p>
           </CardContent>
         </Card>
       </div>
@@ -99,14 +99,14 @@ export function ConnectionsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Connections</h1>
+          <h1 className="text-2xl font-bold">Conexiones</h1>
           <p className="text-muted-foreground">
-            Manage your SII and bank connections
+            Administra tus conexiones con el SII y bancos
           </p>
         </div>
         <Button onClick={() => setCreateDialogOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
-          Add Connection
+          Agregar Conexión
         </Button>
       </div>
 
@@ -130,13 +130,13 @@ export function ConnectionsPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Link2 className="mb-4 h-12 w-12 text-muted-foreground" />
-            <h3 className="mb-2 text-lg font-medium">No connections yet</h3>
+            <h3 className="mb-2 text-lg font-medium">Aún no hay conexiones</h3>
             <p className="mb-4 text-center text-muted-foreground">
-              Connect your SII or bank accounts to start syncing data
+              Conecta tu SII o cuentas bancarias para comenzar a sincronizar datos
             </p>
             <Button onClick={() => setCreateDialogOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
-              Add your first connection
+              Agregar tu primera conexión
             </Button>
           </CardContent>
         </Card>
@@ -145,12 +145,12 @@ export function ConnectionsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Last Sync</TableHead>
-                <TableHead>Next Sync</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Nombre</TableHead>
+                <TableHead>Tipo</TableHead>
+                <TableHead>Estado</TableHead>
+                <TableHead>Última Sincronización</TableHead>
+                <TableHead>Próxima Sincronización</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -206,14 +206,14 @@ export function ConnectionsPage() {
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Connection</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar Conexión</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this connection? This action cannot
-              be undone and will stop all syncing for this connection.
+              ¿Estás seguro de que deseas eliminar esta conexión? Esta acción no se puede
+              deshacer y detendrá toda la sincronización de esta conexión.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
@@ -221,7 +221,7 @@ export function ConnectionsPage() {
               {deleteConnection.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : null}
-              Delete
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

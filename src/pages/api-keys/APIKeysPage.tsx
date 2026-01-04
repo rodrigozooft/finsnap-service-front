@@ -50,10 +50,10 @@ export function APIKeysPage() {
 
     try {
       await deleteAPIKey.mutateAsync(deleteId);
-      toast.success('API key deleted');
+      toast.success('Clave API eliminada');
       setDeleteId(null);
     } catch {
-      toast.error('Failed to delete API key');
+      toast.error('Error al eliminar la clave API');
     }
   };
 
@@ -61,13 +61,13 @@ export function APIKeysPage() {
     try {
       if (key.is_active) {
         await deactivateAPIKey.mutateAsync(key.id);
-        toast.success('API key deactivated');
+        toast.success('Clave API desactivada');
       } else {
         await activateAPIKey.mutateAsync(key.id);
-        toast.success('API key activated');
+        toast.success('Clave API activada');
       }
     } catch {
-      toast.error('Failed to update API key');
+      toast.error('Error al actualizar la clave API');
     }
   };
 
@@ -77,16 +77,16 @@ export function APIKeysPage() {
 
   const formatDate = (date: string | null) => {
     if (!date) return '-';
-    return new Date(date).toLocaleDateString();
+    return new Date(date).toLocaleDateString('es-CL');
   };
 
   if (error) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold">API Keys</h1>
+        <h1 className="text-2xl font-bold">Claves API</h1>
         <Card className="border-destructive">
           <CardContent className="py-6 text-center">
-            <p className="text-destructive">Failed to load API keys</p>
+            <p className="text-destructive">Error al cargar las claves API</p>
           </CardContent>
         </Card>
       </div>
@@ -97,14 +97,14 @@ export function APIKeysPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">API Keys</h1>
+          <h1 className="text-2xl font-bold">Claves API</h1>
           <p className="text-muted-foreground">
-            Manage API keys for programmatic access
+            Administra las claves API para acceso programático
           </p>
         </div>
         <Button onClick={() => setCreateDialogOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
-          Create API Key
+          Crear Clave API
         </Button>
       </div>
 
@@ -114,11 +114,11 @@ export function APIKeysPage() {
           <div className="flex items-start gap-4">
             <Key className="mt-1 h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="font-medium">Using API Keys</p>
+              <p className="font-medium">Cómo usar las Claves API</p>
               <p className="text-sm text-muted-foreground">
-                Include your API key in requests using the header:{' '}
+                Incluye tu clave API en las peticiones usando el header:{' '}
                 <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
-                  X-API-Key: fsk_your_key_here
+                  X-API-Key: fsk_tu_clave_aqui
                 </code>
               </p>
             </div>
@@ -144,13 +144,13 @@ export function APIKeysPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Key className="mb-4 h-12 w-12 text-muted-foreground" />
-            <h3 className="mb-2 text-lg font-medium">No API keys yet</h3>
+            <h3 className="mb-2 text-lg font-medium">Aún no hay claves API</h3>
             <p className="mb-4 text-center text-muted-foreground">
-              Create an API key to access the FinSnap API programmatically
+              Crea una clave API para acceder a la API de FinSnap programáticamente
             </p>
             <Button onClick={() => setCreateDialogOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
-              Create your first API key
+              Crear tu primera clave API
             </Button>
           </CardContent>
         </Card>
@@ -159,13 +159,13 @@ export function APIKeysPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Key Prefix</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Last Used</TableHead>
-                <TableHead>Expires</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Prefijo de Clave</TableHead>
+                <TableHead>Nombre</TableHead>
+                <TableHead>Estado</TableHead>
+                <TableHead>Creado</TableHead>
+                <TableHead>Último Uso</TableHead>
+                <TableHead>Expira</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -179,7 +179,7 @@ export function APIKeysPage() {
                   <TableCell className="font-medium">{apiKey.name}</TableCell>
                   <TableCell>
                     <Badge variant={apiKey.is_active ? 'default' : 'secondary'}>
-                      {apiKey.is_active ? 'Active' : 'Inactive'}
+                      {apiKey.is_active ? 'Activa' : 'Inactiva'}
                     </Badge>
                   </TableCell>
                   <TableCell>{formatDate(apiKey.created_at)}</TableCell>
@@ -191,7 +191,7 @@ export function APIKeysPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => handleToggleActive(apiKey)}
-                        title={apiKey.is_active ? 'Deactivate' : 'Activate'}
+                        title={apiKey.is_active ? 'Desactivar' : 'Activar'}
                       >
                         {apiKey.is_active ? (
                           <PowerOff className="h-4 w-4" />
@@ -230,14 +230,14 @@ export function APIKeysPage() {
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete API Key</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar Clave API</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this API key? This action cannot
-              be undone and any integrations using this key will stop working.
+              ¿Estás seguro de que deseas eliminar esta clave API? Esta acción no se puede
+              deshacer y las integraciones que usen esta clave dejarán de funcionar.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
@@ -245,7 +245,7 @@ export function APIKeysPage() {
               {deleteAPIKey.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : null}
-              Delete
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
