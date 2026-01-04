@@ -28,8 +28,8 @@ interface CreateConnectionDialogProps {
 }
 
 const connectionTypes: { value: ConnectionType; label: string }[] = [
-  { value: 'sii', label: 'SII (Tax Service)' },
-  { value: 'bank_itau', label: 'Banco Itau' },
+  { value: 'sii', label: 'SII (Servicio de Impuestos)' },
+  { value: 'bank_itau', label: 'Banco Itaú' },
 ];
 
 export function CreateConnectionDialog({
@@ -71,7 +71,7 @@ export function CreateConnectionDialog({
     e.preventDefault();
 
     if (!connectionType || !name) {
-      toast.error('Please fill in all required fields');
+      toast.error('Por favor completa todos los campos requeridos');
       return;
     }
 
@@ -93,10 +93,10 @@ export function CreateConnectionDialog({
               }
             : undefined,
       });
-      toast.success('Connection created successfully');
+      toast.success('Conexión creada correctamente');
       handleClose();
     } catch {
-      toast.error('Failed to create connection');
+      toast.error('Error al crear la conexión');
     }
   };
 
@@ -105,21 +105,21 @@ export function CreateConnectionDialog({
       <DialogContent className="sm:max-w-[500px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Add Connection</DialogTitle>
+            <DialogTitle>Agregar Conexión</DialogTitle>
             <DialogDescription>
-              Connect a new data source to sync your financial data
+              Conecta una nueva fuente de datos para sincronizar tu información financiera
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="type">Connection Type *</Label>
+              <Label htmlFor="type">Tipo de Conexión *</Label>
               <Select
                 value={connectionType}
                 onValueChange={(value) => setConnectionType(value as ConnectionType)}
               >
                 <SelectTrigger id="type">
-                  <SelectValue placeholder="Select type" />
+                  <SelectValue placeholder="Seleccionar tipo" />
                 </SelectTrigger>
                 <SelectContent>
                   {connectionTypes.map((type) => (
@@ -132,33 +132,33 @@ export function CreateConnectionDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="name">Connection Name *</Label>
+              <Label htmlFor="name">Nombre de la Conexión *</Label>
               <Input
                 id="name"
-                placeholder="e.g., My Company SII"
+                placeholder="ej., Mi Empresa SII"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="webhook">Webhook URL (optional)</Label>
+              <Label htmlFor="webhook">URL del Webhook (opcional)</Label>
               <Input
                 id="webhook"
                 type="url"
-                placeholder="https://your-server.com/webhook"
+                placeholder="https://tu-servidor.com/webhook"
                 value={webhookUrl}
                 onChange={(e) => setWebhookUrl(e.target.value)}
               />
               <p className="text-xs text-muted-foreground">
-                Receive notifications when sync completes
+                Recibe notificaciones cuando la sincronización se complete
               </p>
             </div>
 
             {/* SII Credentials */}
             {connectionType === 'sii' && (
               <div className="space-y-4 rounded-lg border p-4">
-                <h4 className="font-medium">SII Credentials</h4>
+                <h4 className="font-medium">Credenciales SII</h4>
                 <div className="space-y-2">
                   <Label htmlFor="sii-rut">RUT *</Label>
                   <Input
@@ -169,11 +169,11 @@ export function CreateConnectionDialog({
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="sii-password">Password *</Label>
+                  <Label htmlFor="sii-password">Contraseña *</Label>
                   <Input
                     id="sii-password"
                     type="password"
-                    placeholder="SII password"
+                    placeholder="Contraseña del SII"
                     value={siiPassword}
                     onChange={(e) => setSiiPassword(e.target.value)}
                   />
@@ -184,7 +184,7 @@ export function CreateConnectionDialog({
             {/* Itau Credentials */}
             {connectionType === 'bank_itau' && (
               <div className="space-y-4 rounded-lg border p-4">
-                <h4 className="font-medium">Banco Itau Credentials</h4>
+                <h4 className="font-medium">Credenciales Banco Itaú</h4>
                 <div className="space-y-2">
                   <Label htmlFor="itau-rut">RUT Usuario *</Label>
                   <Input
@@ -199,16 +199,16 @@ export function CreateConnectionDialog({
                   <Input
                     id="itau-clave"
                     type="password"
-                    placeholder="Bank password"
+                    placeholder="Contraseña del banco"
                     value={itauClave}
                     onChange={(e) => setItauClave(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="itau-empresa">RUT Empresa (optional)</Label>
+                  <Label htmlFor="itau-empresa">RUT Empresa (opcional)</Label>
                   <Input
                     id="itau-empresa"
-                    placeholder="Company RUT if different"
+                    placeholder="RUT de la empresa si es diferente"
                     value={itauRutEmpresa}
                     onChange={(e) => setItauRutEmpresa(e.target.value)}
                   />
@@ -219,13 +219,13 @@ export function CreateConnectionDialog({
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancel
+              Cancelar
             </Button>
             <Button type="submit" disabled={createConnection.isPending}>
               {createConnection.isPending && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Create Connection
+              Crear Conexión
             </Button>
           </DialogFooter>
         </form>

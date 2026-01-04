@@ -44,7 +44,7 @@ export function CreateAPIKeyDialog({
     e.preventDefault();
 
     if (!name.trim()) {
-      toast.error('Please enter a name for the API key');
+      toast.error('Por favor ingresa un nombre para la clave API');
       return;
     }
 
@@ -53,11 +53,11 @@ export function CreateAPIKeyDialog({
         name: name.trim(),
         expires_in_days: expiresInDays ? parseInt(expiresInDays, 10) : undefined,
       });
-      toast.success('API key created');
+      toast.success('Clave API creada');
       onKeyCreated(response.key);
       handleClose();
     } catch {
-      toast.error('Failed to create API key');
+      toast.error('Error al crear la clave API');
     }
   };
 
@@ -66,52 +66,52 @@ export function CreateAPIKeyDialog({
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Create API Key</DialogTitle>
+            <DialogTitle>Crear Clave API</DialogTitle>
             <DialogDescription>
-              Create a new API key for programmatic access to FinSnap
+              Crea una nueva clave API para acceso programático a FinSnap
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Key Name *</Label>
+              <Label htmlFor="name">Nombre de la Clave *</Label>
               <Input
                 id="name"
-                placeholder="e.g., Production Server"
+                placeholder="ej., Servidor de Producción"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
               <p className="text-xs text-muted-foreground">
-                A descriptive name to identify this key
+                Un nombre descriptivo para identificar esta clave
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="expires">Expires In (days)</Label>
+              <Label htmlFor="expires">Expira en (días)</Label>
               <Input
                 id="expires"
                 type="number"
-                placeholder="Optional - leave blank for no expiration"
+                placeholder="Opcional - dejar vacío para sin expiración"
                 value={expiresInDays}
                 onChange={(e) => setExpiresInDays(e.target.value)}
                 min="1"
                 max="365"
               />
               <p className="text-xs text-muted-foreground">
-                Number of days until the key expires (1-365)
+                Número de días hasta que la clave expire (1-365)
               </p>
             </div>
           </div>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancel
+              Cancelar
             </Button>
             <Button type="submit" disabled={createAPIKey.isPending}>
               {createAPIKey.isPending && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Create Key
+              Crear Clave
             </Button>
           </DialogFooter>
         </form>

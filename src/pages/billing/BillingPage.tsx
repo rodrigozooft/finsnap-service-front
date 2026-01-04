@@ -25,9 +25,9 @@ export function BillingPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Billing</h1>
+        <h1 className="text-2xl font-bold">Facturación</h1>
         <p className="text-muted-foreground">
-          Manage your subscription and payments
+          Administra tu suscripción y pagos
         </p>
       </div>
 
@@ -36,11 +36,11 @@ export function BillingPage() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Subscription Status</CardTitle>
-              <CardDescription>Your current plan and usage</CardDescription>
+              <CardTitle>Estado de Suscripción</CardTitle>
+              <CardDescription>Tu plan actual y uso</CardDescription>
             </div>
             <Badge variant="secondary" className="text-sm">
-              Pay per connection
+              Pago por conexión
             </Badge>
           </div>
         </CardHeader>
@@ -49,7 +49,7 @@ export function BillingPage() {
             <div className="rounded-lg border p-4">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Link2 className="h-4 w-4" />
-                <span className="text-sm font-medium">Active Connections</span>
+                <span className="text-sm font-medium">Conexiones Activas</span>
               </div>
               <p className="mt-2 text-2xl font-bold">
                 {isLoading ? '-' : billableConnections.length}
@@ -59,7 +59,7 @@ export function BillingPage() {
             <div className="rounded-lg border p-4">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <CreditCard className="h-4 w-4" />
-                <span className="text-sm font-medium">Price per Connection</span>
+                <span className="text-sm font-medium">Precio por Conexión</span>
               </div>
               <p className="mt-2 text-2xl font-bold">
                 {formatCLP(PRICE_PER_CONNECTION_CLP)}
@@ -70,7 +70,7 @@ export function BillingPage() {
             <div className="rounded-lg border bg-primary/5 p-4">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Calculator className="h-4 w-4" />
-                <span className="text-sm font-medium">Monthly Total</span>
+                <span className="text-sm font-medium">Total Mensual</span>
               </div>
               <p className="mt-2 text-2xl font-bold text-primary">
                 {isLoading ? '-' : formatCLP(monthlyCost)}
@@ -82,14 +82,14 @@ export function BillingPage() {
 
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium">Next billing date</p>
+              <p className="font-medium">Próxima fecha de facturación</p>
               <p className="text-sm text-muted-foreground">
-                Billed monthly on the 1st
+                Facturación mensual el día 1
               </p>
             </div>
             <Button>
               <CreditCard className="mr-2 h-4 w-4" />
-              Pay with Flow.cl
+              Pagar con Flow.cl
               <ExternalLink className="ml-2 h-3 w-3" />
             </Button>
           </div>
@@ -99,20 +99,20 @@ export function BillingPage() {
       {/* Connections Breakdown */}
       <Card>
         <CardHeader>
-          <CardTitle>Billable Connections</CardTitle>
+          <CardTitle>Conexiones Facturables</CardTitle>
           <CardDescription>
-            Connections included in your monthly billing
+            Conexiones incluidas en tu facturación mensual
           </CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <p className="text-muted-foreground">Loading...</p>
+            <p className="text-muted-foreground">Cargando...</p>
           ) : billableConnections.length === 0 ? (
             <div className="py-8 text-center">
               <Link2 className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-              <p className="font-medium">No billable connections</p>
+              <p className="font-medium">No hay conexiones facturables</p>
               <p className="text-sm text-muted-foreground">
-                Add connections to start syncing your financial data
+                Agrega conexiones para comenzar a sincronizar tus datos financieros
               </p>
             </div>
           ) : (
@@ -135,7 +135,7 @@ export function BillingPage() {
               ))}
               <Separator className="my-4" />
               <div className="flex items-center justify-between text-lg font-bold">
-                <span>Total Monthly</span>
+                <span>Total Mensual</span>
                 <span className="text-primary">{formatCLP(monthlyCost)}</span>
               </div>
             </div>
@@ -146,9 +146,9 @@ export function BillingPage() {
       {/* Payment Info */}
       <Card>
         <CardHeader>
-          <CardTitle>Payment Information</CardTitle>
+          <CardTitle>Información de Pago</CardTitle>
           <CardDescription>
-            Secure payments powered by Flow.cl
+            Pagos seguros con Flow.cl
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -156,11 +156,11 @@ export function BillingPage() {
             <div className="flex items-start gap-4">
               <CreditCard className="mt-1 h-5 w-5 text-muted-foreground" />
               <div>
-                <p className="font-medium">Secure Payment Processing</p>
+                <p className="font-medium">Procesamiento de Pago Seguro</p>
                 <p className="text-sm text-muted-foreground">
-                  All payments are processed securely through Flow.cl, Chile's
-                  leading payment platform. We accept credit cards, debit cards,
-                  and bank transfers.
+                  Todos los pagos son procesados de forma segura a través de Flow.cl,
+                  la plataforma de pagos líder en Chile. Aceptamos tarjetas de crédito,
+                  tarjetas de débito y transferencias bancarias.
                 </p>
               </div>
             </div>

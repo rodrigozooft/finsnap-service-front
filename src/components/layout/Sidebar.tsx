@@ -4,10 +4,10 @@ import { cn } from '@/lib/utils';
 import logo from '@/assets/logo.png';
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Connections', href: '/connections', icon: Link2 },
-  { name: 'API Keys', href: '/api-keys', icon: Key },
-  { name: 'Billing', href: '/billing', icon: CreditCard },
+  { name: 'Panel de Control', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Conexiones', href: '/connections', icon: Link2 },
+  { name: 'Claves API', href: '/api-keys', icon: Key },
+  { name: 'Facturación', href: '/billing', icon: CreditCard },
 ];
 
 interface SidebarProps {

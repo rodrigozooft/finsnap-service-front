@@ -25,15 +25,15 @@ export function LoginPage() {
     const newErrors: { email?: string; password?: string } = {};
 
     if (!email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'El correo es obligatorio';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Invalid email format';
+      newErrors.email = 'Formato de correo inválido';
     }
 
     if (!password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = 'La contraseña es obligatoria';
     } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
     }
 
     setErrors(newErrors);
@@ -48,10 +48,10 @@ export function LoginPage() {
     setIsLoading(true);
     try {
       await login({ email, password });
-      toast.success('Login successful');
+      toast.success('Sesión iniciada correctamente');
       navigate(from, { replace: true });
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Login failed. Please check your credentials.';
+      const message = error instanceof Error ? error.message : 'Error al iniciar sesión. Por favor verifica tus credenciales.';
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -66,20 +66,20 @@ export function LoginPage() {
             <img src={logo} alt="FinSnap" className="h-12 w-auto" />
           </div>
           <div>
-            <CardTitle className="text-2xl">Welcome back</CardTitle>
+            <CardTitle className="text-2xl">Bienvenido</CardTitle>
             <CardDescription>
-              Sign in to your FinSnap Connect account
+              Inicia sesión en tu cuenta de FinSnap Connect
             </CardDescription>
           </div>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Correo electrónico</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@company.com"
+                placeholder="tu@empresa.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
@@ -90,11 +90,11 @@ export function LoginPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Contraseña</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Ingresa tu contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
@@ -108,12 +108,12 @@ export function LoginPage() {
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Sign in
+              Iniciar sesión
             </Button>
             <p className="text-center text-sm text-muted-foreground">
-              Don't have an account?{' '}
+              ¿No tienes una cuenta?{' '}
               <Link to="/register" className="text-primary hover:underline">
-                Create one
+                Crear una
               </Link>
             </p>
           </CardFooter>

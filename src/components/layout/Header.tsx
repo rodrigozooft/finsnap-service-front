@@ -36,7 +36,7 @@ export function Header({ onMenuClick }: HeaderProps) {
         onClick={onMenuClick}
       >
         <Menu className="h-5 w-5" />
-        <span className="sr-only">Toggle menu</span>
+        <span className="sr-only">Abrir menú</span>
       </Button>
 
       <div className="flex-1" />
@@ -55,7 +55,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">
-                {user?.company_name || 'My Account'}
+                {user?.company_name || 'Mi Cuenta'}
               </p>
               <p className="text-xs leading-none text-muted-foreground">
                 {user?.email}
@@ -65,12 +65,12 @@ export function Header({ onMenuClick }: HeaderProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <User className="mr-2 h-4 w-4" />
-            Profile
+            Perfil
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogout} className="text-destructive">
             <LogOut className="mr-2 h-4 w-4" />
-            Log out
+            Cerrar sesión
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

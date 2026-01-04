@@ -31,21 +31,21 @@ export function DashboardPage() {
     .reverse()[0];
 
   const formatDate = (date: string | null) => {
-    if (!date) return 'Never';
-    return new Date(date).toLocaleString();
+    if (!date) return 'Nunca';
+    return new Date(date).toLocaleString('es-CL');
   };
 
   if (error) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <h1 className="text-2xl font-bold">Panel de Control</h1>
         <Card className="border-destructive">
           <CardContent className="flex items-center gap-4 pt-6">
             <AlertCircle className="h-8 w-8 text-destructive" />
             <div>
-              <p className="font-medium">Failed to load dashboard data</p>
+              <p className="font-medium">Error al cargar los datos del panel</p>
               <p className="text-sm text-muted-foreground">
-                Please try refreshing the page
+                Por favor intenta refrescar la página
               </p>
             </div>
           </CardContent>
@@ -58,15 +58,15 @@ export function DashboardPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h1 className="text-2xl font-bold">Panel de Control</h1>
           <p className="text-muted-foreground">
-            Overview of your connections and sync activity
+            Resumen de tus conexiones y actividad de sincronización
           </p>
         </div>
         <Button asChild>
           <Link to="/connections">
             <Plus className="mr-2 h-4 w-4" />
-            Add Connection
+            Agregar Conexión
           </Link>
         </Button>
       </div>
@@ -75,7 +75,7 @@ export function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Connections</CardTitle>
+            <CardTitle className="text-sm font-medium">Total de Conexiones</CardTitle>
             <Link2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -89,7 +89,7 @@ export function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active</CardTitle>
+            <CardTitle className="text-sm font-medium">Activas</CardTitle>
             <div className="h-2 w-2 rounded-full bg-green-500" />
           </CardHeader>
           <CardContent>
@@ -103,7 +103,7 @@ export function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Syncing</CardTitle>
+            <CardTitle className="text-sm font-medium">Sincronizando</CardTitle>
             <RefreshCw className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -117,7 +117,7 @@ export function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Last Sync</CardTitle>
+            <CardTitle className="text-sm font-medium">Última Sincronización</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -134,7 +134,7 @@ export function DashboardPage() {
       {!isLoading && connections.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Connection Status</CardTitle>
+            <CardTitle>Estado de Conexiones</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -164,7 +164,7 @@ export function DashboardPage() {
               ))}
               {connections.length > 5 && (
                 <Button variant="outline" asChild className="w-full">
-                  <Link to="/connections">View all connections</Link>
+                  <Link to="/connections">Ver todas las conexiones</Link>
                 </Button>
               )}
             </div>
@@ -177,14 +177,14 @@ export function DashboardPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Link2 className="mb-4 h-12 w-12 text-muted-foreground" />
-            <h3 className="mb-2 text-lg font-medium">No connections yet</h3>
+            <h3 className="mb-2 text-lg font-medium">Aún no hay conexiones</h3>
             <p className="mb-4 text-center text-muted-foreground">
-              Connect your SII or bank accounts to start syncing data
+              Conecta tu SII o cuentas bancarias para comenzar a sincronizar datos
             </p>
             <Button asChild>
               <Link to="/connections">
                 <Plus className="mr-2 h-4 w-4" />
-                Add your first connection
+                Agregar tu primera conexión
               </Link>
             </Button>
           </CardContent>
@@ -197,7 +197,7 @@ export function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-destructive">
               <AlertCircle className="h-5 w-5" />
-              {errorConnections} Connection{errorConnections > 1 ? 's' : ''} with Errors
+              {errorConnections} {errorConnections > 1 ? 'Conexiones con Errores' : 'Conexión con Error'}
             </CardTitle>
           </CardHeader>
           <CardContent>

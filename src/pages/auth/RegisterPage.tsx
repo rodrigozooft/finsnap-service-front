@@ -31,21 +31,21 @@ export function RegisterPage() {
     const newErrors: FormErrors = {};
 
     if (!email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'El correo es obligatorio';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Invalid email format';
+      newErrors.email = 'Formato de correo inválido';
     }
 
     if (!password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = 'La contraseña es obligatoria';
     } else if (password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
+      newErrors.password = 'La contraseña debe tener al menos 8 caracteres';
     }
 
     if (!confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = 'Por favor confirma tu contraseña';
     } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = 'Las contraseñas no coinciden';
     }
 
     setErrors(newErrors);
@@ -64,10 +64,10 @@ export function RegisterPage() {
         password,
         company_name: companyName || undefined,
       });
-      toast.success('Account created successfully');
+      toast.success('Cuenta creada correctamente');
       navigate('/dashboard', { replace: true });
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Registration failed. Please try again.';
+      const message = error instanceof Error ? error.message : 'Error al registrarse. Por favor intenta nuevamente.';
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -82,20 +82,20 @@ export function RegisterPage() {
             <img src={logo} alt="FinSnap" className="h-12 w-auto" />
           </div>
           <div>
-            <CardTitle className="text-2xl">Create an account</CardTitle>
+            <CardTitle className="text-2xl">Crear una cuenta</CardTitle>
             <CardDescription>
-              Get started with FinSnap Connect
+              Comienza con FinSnap Connect
             </CardDescription>
           </div>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Correo electrónico</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@company.com"
+                placeholder="tu@empresa.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
@@ -106,22 +106,22 @@ export function RegisterPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="company_name">Company Name (optional)</Label>
+              <Label htmlFor="company_name">Nombre de la Empresa (opcional)</Label>
               <Input
                 id="company_name"
                 type="text"
-                placeholder="Acme Inc."
+                placeholder="Mi Empresa SpA"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
                 disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Contraseña</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Create a strong password"
+                placeholder="Crea una contraseña segura"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
@@ -132,11 +132,11 @@ export function RegisterPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder="Confirm your password"
+                placeholder="Confirma tu contraseña"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 disabled={isLoading}
@@ -150,12 +150,12 @@ export function RegisterPage() {
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Create account
+              Crear cuenta
             </Button>
             <p className="text-center text-sm text-muted-foreground">
-              Already have an account?{' '}
+              ¿Ya tienes una cuenta?{' '}
               <Link to="/login" className="text-primary hover:underline">
-                Sign in
+                Iniciar sesión
               </Link>
             </p>
           </CardFooter>
