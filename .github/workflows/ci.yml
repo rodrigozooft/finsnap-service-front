@@ -1,0 +1,182 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  release:
+    types: [published]
+
+env:
+  NODE_VERSION: "20"
+  AWS_REGION: us-east-1
+
+jobs:
+  # ============================================
+  # Pull Request: Lint, Type Check, Build
+  # ============================================
+  test:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: TypeScript check
+        run: npx tsc -b
+
+      - name: Build production bundle
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: https://dev-api-services.finsnap.tax/api/v1
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-pr-${{ github.event.pull_request.number }}
+          path: dist/
+          retention-days: 7
+
+  # ============================================
+  # Push to Main: Deploy to Dev
+  # ============================================
+  deploy-dev:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: TypeScript check
+        run: npx tsc -b
+
+      - name: Build for dev
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: https://dev-api-services.finsnap.tax/api/v1
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Sync to S3
+        run: |
+          # Upload static assets with long cache (Vite uses hash-based filenames)
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_DEV }} \
+            --delete \
+            --cache-control "public, max-age=31536000, immutable" \
+            --exclude "index.html" \
+            --exclude "*.json"
+
+          # Upload index.html with no-cache for immediate updates
+          aws s3 cp dist/index.html s3://${{ secrets.S3_BUCKET_DEV }}/index.html \
+            --cache-control "no-cache, no-store, must-revalidate"
+
+          # Upload JSON files (like manifest) with short cache
+          for file in $(find dist -name "*.json" -type f); do
+            relative_path="${file#dist/}"
+            aws s3 cp "$file" "s3://${{ secrets.S3_BUCKET_DEV }}/$relative_path" \
+              --cache-control "public, max-age=0, must-revalidate"
+          done
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV }} \
+            --paths "/*"
+
+  # ============================================
+  # Release: Deploy to Production
+  # ============================================
+  deploy-prod:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: TypeScript check
+        run: npx tsc -b
+
+      - name: Build for production
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: https://api-services.finsnap.tax/api/v1
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_PROD }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Sync to S3
+        run: |
+          # Upload static assets with long cache (Vite uses hash-based filenames)
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_PROD }} \
+            --delete \
+            --cache-control "public, max-age=31536000, immutable" \
+            --exclude "index.html" \
+            --exclude "*.json"
+
+          # Upload index.html with no-cache for immediate updates
+          aws s3 cp dist/index.html s3://${{ secrets.S3_BUCKET_PROD }}/index.html \
+            --cache-control "no-cache, no-store, must-revalidate"
+
+          # Upload JSON files (like manifest) with short cache
+          for file in $(find dist -name "*.json" -type f); do
+            relative_path="${file#dist/}"
+            aws s3 cp "$file" "s3://${{ secrets.S3_BUCKET_PROD }}/$relative_path" \
+              --cache-control "public, max-age=0, must-revalidate"
+          done
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PROD }} \
+            --paths "/*"
