@@ -35,7 +35,8 @@ export function RegisterPage() {
       setErrors((prev) => ({ ...prev, confirmPassword: 'Las contraseñas no coinciden' }));
     } else {
       setErrors((prev) => {
-        const { confirmPassword: _, ...rest } = prev;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { confirmPassword: _ignored, ...rest } = prev;
         return rest;
       });
     }
