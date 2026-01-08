@@ -17,7 +17,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useCreateConnection } from '@/hooks/useConnections';
+import { useCreateLinkToken } from '@/hooks/useLinkToken';
+import { useConnect } from '@/hooks/useConnect';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import type { ConnectionType } from '@/types';
@@ -40,26 +41,17 @@ export function CreateConnectionDialog({
   const [name, setName] = useState('');
   const [webhookUrl, setWebhookUrl] = useState('');
 
-  // SII credentials
-  const [siiRut, setSiiRut] = useState('');
-  const [siiPassword, setSiiPassword] = useState('');
-
-  // Itau credentials
-  const [itauRutUsuario, setItauRutUsuario] = useState('');
-  const [itauClave, setItauClave] = useState('');
-  const [itauRutEmpresa, setItauRutEmpresa] = useState('');
-
-  const createConnection = useCreateConnection();
+  const createLinkToken = useCreateLinkToken();
+  const { openConnect } = useConnect({
+    onSuccess: () => {
+      handleClose();
+    },
+  });
 
   const resetForm = () => {
     setConnectionType('');
     setName('');
     setWebhookUrl('');
-    setSiiRut('');
-    setSiiPassword('');
-    setItauRutUsuario('');
-    setItauClave('');
-    setItauRutEmpresa('');
   };
 
   const handleClose = () => {
@@ -76,27 +68,16 @@ export function CreateConnectionDialog({
     }
 
     try {
-      await createConnection.mutateAsync({
+      const { link_token } = await createLinkToken.mutateAsync({
         connection_type: connectionType,
         name,
         webhook_url: webhookUrl || undefined,
-        sii_credentials:
-          connectionType === 'sii'
-            ? { rut: siiRut, password: siiPassword }
-            : undefined,
-        itau_credentials:
-          connectionType === 'bank_itau'
-            ? {
-                rut_usuario: itauRutUsuario,
-                clave: itauClave,
-                rut_empresa: itauRutEmpresa || undefined,
-              }
-            : undefined,
       });
-      toast.success('Conexión creada correctamente');
-      handleClose();
+
+      // Open SDK modal with the link token
+      openConnect(link_token);
     } catch {
-      toast.error('Error al crear la conexión');
+      toast.error('Error al iniciar la conexión');
     }
   };
 
@@ -154,78 +135,17 @@ export function CreateConnectionDialog({
                 Recibe notificaciones cuando la sincronización se complete
               </p>
             </div>
-
-            {/* SII Credentials */}
-            {connectionType === 'sii' && (
-              <div className="space-y-4 rounded-lg border p-4">
-                <h4 className="font-medium">Credenciales SII</h4>
-                <div className="space-y-2">
-                  <Label htmlFor="sii-rut">RUT *</Label>
-                  <Input
-                    id="sii-rut"
-                    placeholder="12345678-9"
-                    value={siiRut}
-                    onChange={(e) => setSiiRut(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="sii-password">Contraseña *</Label>
-                  <Input
-                    id="sii-password"
-                    type="password"
-                    placeholder="Contraseña del SII"
-                    value={siiPassword}
-                    onChange={(e) => setSiiPassword(e.target.value)}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Itau Credentials */}
-            {connectionType === 'bank_itau' && (
-              <div className="space-y-4 rounded-lg border p-4">
-                <h4 className="font-medium">Credenciales Banco Itaú</h4>
-                <div className="space-y-2">
-                  <Label htmlFor="itau-rut">RUT Usuario *</Label>
-                  <Input
-                    id="itau-rut"
-                    placeholder="12345678-9"
-                    value={itauRutUsuario}
-                    onChange={(e) => setItauRutUsuario(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="itau-clave">Clave *</Label>
-                  <Input
-                    id="itau-clave"
-                    type="password"
-                    placeholder="Contraseña del banco"
-                    value={itauClave}
-                    onChange={(e) => setItauClave(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="itau-empresa">RUT Empresa (opcional)</Label>
-                  <Input
-                    id="itau-empresa"
-                    placeholder="RUT de la empresa si es diferente"
-                    value={itauRutEmpresa}
-                    onChange={(e) => setItauRutEmpresa(e.target.value)}
-                  />
-                </div>
-              </div>
-            )}
           </div>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={createConnection.isPending}>
-              {createConnection.isPending && (
+            <Button type="submit" disabled={createLinkToken.isPending}>
+              {createLinkToken.isPending && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Crear Conexión
+              Continuar
             </Button>
           </DialogFooter>
         </form>
