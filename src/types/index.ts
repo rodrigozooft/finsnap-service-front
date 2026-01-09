@@ -117,3 +117,17 @@ export interface APIKeyListResponse {
 export interface MessageResponse {
   message: string;
 }
+
+// Link Token types
+export interface LinkTokenCreateRequest {
+  connection_type: ConnectionType;
+  name: string;
+  webhook_url?: string;
+}
+
+export interface LinkTokenResponse {
+  link_token: string;
+  expiration: string;
+}
+
+// Connect SDK types are exported from @finsnap/connect-js package
